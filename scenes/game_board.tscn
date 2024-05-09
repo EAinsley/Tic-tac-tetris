@@ -1,0 +1,33 @@
+[gd_scene load_steps=3 format=3 uid="uid://85ghs1acerx7"]
+
+[ext_resource type="Texture2D" uid="uid://hub0yiy1jr0t" path="res://Arts/Textures/Prototype/Border.png" id="1_8w8re"]
+[ext_resource type="Texture2D" uid="uid://dfo4gwpssvxh" path="res://Arts/Textures/Prototype/Grid.png" id="2_jhvnm"]
+
+[node name="GameBoard" type="Node2D"]
+
+[node name="Board" type="TextureRect" parent="."]
+offset_left = -256.0
+offset_top = -496.0
+offset_right = 1794.0
+offset_bottom = 3474.0
+scale = Vector2(0.25, 0.25)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("1_8w8re")
+
+[node name="Grid" type="TextureRect" parent="Board"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 64.0
+offset_top = 64.0
+offset_right = -66.0
+offset_bottom = -57.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_jhvnm")
+stretch_mode = 1
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(0.5, 0.5)
