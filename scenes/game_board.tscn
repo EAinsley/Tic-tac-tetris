@@ -1,11 +1,14 @@
-[gd_scene load_steps=3 format=3 uid="uid://85ghs1acerx7"]
+[gd_scene load_steps=6 format=3 uid="uid://85ghs1acerx7"]
 
 [ext_resource type="Texture2D" uid="uid://hub0yiy1jr0t" path="res://arts/textures/prototype/Border.png" id="1_8w8re"]
 [ext_resource type="Texture2D" uid="uid://dfo4gwpssvxh" path="res://arts/textures/prototype/Grid.png" id="2_jhvnm"]
+[ext_resource type="Script" path="res://scripts/piece_spawner.gd" id="3_0idpl"]
+[ext_resource type="Script" path="res://scripts/board.gd" id="4_m07h8"]
+[ext_resource type="PackedScene" uid="uid://2i7yf105gw06" path="res://scenes/tetromino.tscn" id="4_uxtaj"]
 
 [node name="GameBoard" type="Node2D"]
 
-[node name="Board" type="TextureRect" parent="."]
+[node name="Boarder" type="TextureRect" parent="."]
 offset_left = -256.0
 offset_top = -496.0
 offset_right = 1794.0
@@ -15,7 +18,7 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 texture = ExtResource("1_8w8re")
 
-[node name="Grid" type="TextureRect" parent="Board"]
+[node name="Grid" type="TextureRect" parent="Boarder"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -31,3 +34,15 @@ stretch_mode = 1
 
 [node name="Camera2D" type="Camera2D" parent="."]
 zoom = Vector2(0.5, 0.5)
+
+[node name="Board" type="Node" parent="."]
+script = ExtResource("4_m07h8")
+grid_number = Vector2(10, 20)
+
+[node name="PieceSpawner" type="Node" parent="Board"]
+script = ExtResource("3_0idpl")
+tetromino_scene = ExtResource("4_uxtaj")
+spawn_position = Vector2(5, 2)
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(-48, -48)
