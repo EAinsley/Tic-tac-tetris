@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3 uid="uid://85ghs1acerx7"]
 
-[ext_resource type="Texture2D" uid="uid://hub0yiy1jr0t" path="res://Arts/Textures/Prototype/Border.png" id="1_8w8re"]
-[ext_resource type="Texture2D" uid="uid://dfo4gwpssvxh" path="res://Arts/Textures/Prototype/Grid.png" id="2_jhvnm"]
+[ext_resource type="Texture2D" uid="uid://hub0yiy1jr0t" path="res://arts/textures/prototype/Border.png" id="1_8w8re"]
+[ext_resource type="Texture2D" uid="uid://dfo4gwpssvxh" path="res://arts/textures/prototype/Grid.png" id="2_jhvnm"]
 
 [node name="GameBoard" type="Node2D"]
 
