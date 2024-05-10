@@ -15,16 +15,18 @@ var cells: Dictionary = {
 		Tetromino.Z: [Vector2(-1, -1), Vector2(0, -1), Vector2(0, 0), Vector2(0, 1)],
 	}
 	
-var texture_data = {
-	Tetromino.I : preload("res://resources/i_piece.tres"),
-	Tetromino.O : preload("res://resources/o_piece.tres"),
-	Tetromino.T : preload("res://resources/t_piece.tres"),
-	Tetromino.J : preload("res://resources/j_piece.tres"),
-	Tetromino.L : preload("res://resources/l_piece.tres"),
-	Tetromino.S : preload("res://resources/s_piece.tres"),
-	Tetromino.Z : preload("res://resources/z_piece.tres"),
+var tetromino_data: Dictionary = {
+	Tetromino.I : load("res://resources/i_piece.tres"),
+	Tetromino.O : load("res://resources/o_piece.tres"),
+	Tetromino.T : load("res://resources/t_piece.tres"),
+	Tetromino.J : load("res://resources/j_piece.tres"),
+	Tetromino.L : load("res://resources/l_piece.tres"),
+	Tetromino.S : load("res://resources/s_piece.tres"),
+	Tetromino.Z : load("res://resources/z_piece.tres"),
 }
 
-var clockwise_rotation_transform = Transform2D(-PI/2, Vector2(0, 0))
-var counter_clockwise_rotation_transform = Transform2D(-PI/2, Vector2(0, 0))
+var clockwise_rotation_transform : Transform2D = Transform2D(-PI/2, Vector2(0, 0))
+var counter_clockwise_rotation_transform : Transform2D = Transform2D(-PI/2, Vector2(0, 0))
+
+@export var grid_size : Vector2 = Vector2(48, 48)
 
