@@ -1,11 +1,13 @@
-# Responsible for control spawning
 extends Node
+## Responsible for control spawning
 
-@onready var board: Board = $".."
 
-var current_tetromino: SharedData.Tetromino
 @export var tetromino_scene: PackedScene
 @export var spawn_position: Vector2 ## 填入格子的位置，左上角为原点
+
+var current_tetromino: SharedData.Tetromino
+
+@onready var board: Board = $".."
 
 
 # Called when the node enters the scene tree for the first time.
