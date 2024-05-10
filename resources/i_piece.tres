@@ -9,4 +9,3 @@ script = ExtResource("1_orxdu")
 piece_texture_cross = ExtResource("2_46ghd")
 piece_texture_circle = ExtResource("1_ooita")
 tetromino_type = 0
-span_position = Vector2(0, 0)
