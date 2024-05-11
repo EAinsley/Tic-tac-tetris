@@ -1,11 +1,11 @@
 [gd_resource type="Resource" script_class="PieceData" load_steps=4 format=3 uid="uid://dmff5pkpt154"]
 
-[ext_resource type="Texture2D" uid="uid://d3xrhupkcno87" path="res://arts/textures/prototype/Yellow_circle.png" id="1_eioip"]
-[ext_resource type="Texture2D" uid="uid://bdy6nie8uksvv" path="res://arts/textures/prototype/Yellow_cross.png" id="2_c1g5h"]
+[ext_resource type="Texture2D" uid="uid://bvkdsvcsf70av" path="res://arts/textures/blocks/Z_O.png" id="1_cpj4p"]
+[ext_resource type="Texture2D" uid="uid://donwhsvj00g3l" path="res://arts/textures/blocks/Z_X.png" id="2_yqkj2"]
 [ext_resource type="Script" path="res://scripts/piece_data.gd" id="3_3c1qo"]
 
 [resource]
 script = ExtResource("3_3c1qo")
-piece_texture_cross = ExtResource("2_c1g5h")
-piece_texture_circle = ExtResource("1_eioip")
+piece_texture_cross = ExtResource("2_yqkj2")
+piece_texture_circle = ExtResource("1_cpj4p")
 tetromino_type = 6
