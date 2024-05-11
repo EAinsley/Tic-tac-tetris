@@ -3,6 +3,7 @@ extends Node2D
 
 signal tetromino_locked(pieces : Array[Piece])
 signal destroyed
+signal lost
 
 @export var piece_scene: PackedScene  
 
@@ -125,11 +126,17 @@ func calculate_delta_position(direction: Vector2, position: Vector2) -> Vector2:
 	return direction *SharedData.grid_size
 	
 func lock():
+	for piece in piecies:
+		if piece.grid_index.y < 2:
+			print("lost")
+			lost.emit()
+			return
 	set_process_unhandled_input(false)
 	tetromino_locked.emit(self)
 	print("locked")
 	timer.stop()
 	timer.queue_free()
+
 
 func _on_piece_destroyed(piece: Piece) -> void:
 	piecies.erase(piece)
