@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://2i7yf105gw06"]
+
+[ext_resource type="Script" path="res://scripts/tetromino.gd" id="1_mn2r3"]
+[ext_resource type="PackedScene" uid="uid://cj1dsw1hyaetd" path="res://scenes/piece.tscn" id="2_4fo7y"]
+
+[node name="Tetromino" type="Node2D"]
+script = ExtResource("1_mn2r3")
+piece_scene = ExtResource("2_4fo7y")
+
+[node name="Timer" type="Timer" parent="."]
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
