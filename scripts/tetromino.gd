@@ -1,7 +1,7 @@
 class_name Tetromino
 extends Node2D
 
-signal tetromino_locked(pieces)
+signal tetromino_locked(pieces : Array[Piece])
 
 @export var piece_scene: PackedScene  
 
@@ -19,13 +19,14 @@ var board: Board
 @onready var timer: Timer = $Timer
 
 func _ready() -> void:
-	var tetromino_cells = SharedData.cells[piece_data.tetromino_type]
+	var tetromino_cells : Array = SharedData.cells[piece_data.tetromino_type]
 	for cell : Vector2 in tetromino_cells:
 		var piece: Piece = piece_scene.instantiate() as Piece
 		add_child(piece)
 		piece.self_index = cell
 		piece.tetromino = self
 		piecies.append(piece)
+		piece.tree_exiting.connect(_on_piece_tree_exiting.bind(piece))
 	var cross_position: Array = range(4)
 	cross_position.shuffle()
 	# Set cross & circle
@@ -60,7 +61,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		pass
 
 func move(direction: Vector2) -> bool:
-	var delta_position = calculate_delta_position(direction, position)
+	var delta_position : Vector2 = calculate_delta_position(direction, position)
 	if delta_position == Vector2.ZERO:
 		return false
 	position += delta_position
@@ -70,18 +71,13 @@ func move(direction: Vector2) -> bool:
 	
 func rotate_clockwise() -> void:
 	print("rotate clockwise")
-	#var transform: Transform2D = Transform2D(-PI/2, Vector2.ZERO)
-	var old_roation = transform.get_rotation()
 	
 	# Calculate rotation origin
-	var origin : Vector2 = current_index
-	var is_cross_board : bool = false
-	var rotate_trial : int = 0
+	const ROTATE_TRIALS : int = 3
 	var offset : Vector2 = Vector2.ZERO
 	# Do the rotation
-	for i in range(3):
+	for i in range(ROTATE_TRIALS):
 		var new_index: Array = Array()
-		rotate_trial += 1
 		for piece in piecies:
 			new_index.append(SharedData.clockwise_rotation_transform * piece.self_index)
 		
@@ -112,6 +108,8 @@ func rotate_clockwise() -> void:
 		if rotate_success:
 			for j in range(new_index.size()):
 				piecies[j].self_index = new_index[j]
+			if lock_on_success:
+				lock()
 			break
 	# update
 	move(offset)
@@ -129,6 +127,9 @@ func lock():
 	print("locked")
 	timer.stop()
 	timer.queue_free()
+
+func _on_piece_tree_exiting(piece: Piece) -> void:
+	piecies.erase(piece)
 
 func _on_timer_timeout() -> void:
 	if !move(Vector2.DOWN):
