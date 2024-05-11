@@ -51,13 +51,20 @@ func on_tetromino_locked(tetormino: Tetromino):
 	active_tetormino.append(tetormino)
 	var piecies = tetormino.piecies
 	for piece in piecies:
-		var grid_type = GridType.CROSS if piece.is_cross else GridType.CIRCLE
-		_game_board[piece.grid_index.x][piece.grid_index.y] = [grid_type, piece]
+		_set_grid(piece)
 		print("get piecies: ", piece.grid_index)
+	print("after locked")
+	_debug_print_game_board()
+	var is_fell = true
+	while is_fell:
+		_erase_blocks(tetormino.piecies)
+		print("after erased")
+		_debug_print_game_board()
+		is_fell = _fall_tetrominos()
+		print("after fall: ", is_fell)
+		_debug_print_game_board()
+		pass
 		
-	_erase_blocks(tetormino.piecies)
-	# TODO: move tetrominos
-	
 func get_grid_type(pos: Vector2):
 	return _game_board[pos.x][pos.y][0]
 
@@ -66,6 +73,9 @@ func get_grid_piece(pos: Vector2):
 
 func get_grid(pos: Vector2):
 	return _game_board[pos.x][pos.y]
+
+func on_tetromino_destroyed(tetromimo: Tetromino):
+	active_tetormino.erase(tetromimo)
 
 # To erase the blocks using tic-tac-toe
 func _erase_blocks(piecies: Array[Piece]):
@@ -86,6 +96,7 @@ func _erase_blocks(piecies: Array[Piece]):
 				or (_is_grid_same(left1, center) and _is_grid_same(right1, center)) 
 				or (_is_grid_same(center, right1) and _is_grid_same(center, right2))
 			):
+				mark_piece_erase.call(get_grid_piece(center))
 				for i in range(2):
 					var current_grid = center + directions[i]
 					while(_is_grid_same(current_grid, center)):
@@ -96,13 +107,37 @@ func _erase_blocks(piecies: Array[Piece]):
 	for piece : Piece in piecies_to_erase:
 		var index = piece.grid_index
 		_game_board[index.x][index.y] = [GridType.EMPTY, null]
-		piece.queue_free()
+		piece.destroy()
 					
 			
 func _is_grid_same(left: Vector2, right: Vector2):
 	return !is_out_of_board(left) && !is_out_of_board(right) && get_grid_type(left) == get_grid_type(right)
 	
+func _fall_tetrominos() -> bool:
+	print("fall termino")
+	var has_fall = false
+	for tetromino : Tetromino in active_tetormino:
+		for piece in tetromino.piecies:
+			_erase_grid(piece.grid_index)
+		while tetromino.move(Vector2.DOWN):
+			has_fall = true
+		for piece in tetromino.piecies:
+			_set_grid(piece)
+	return has_fall
+	
+func _erase_grid(pos: Vector2):
+	_game_board[pos.x][pos.y] = [GridType.EMPTY, null]
 
-
+func _set_grid(piece: Piece):
+	var grid_type = GridType.CROSS if piece.is_cross else GridType.CIRCLE
+	_game_board[piece.grid_index.x][piece.grid_index.y] = [grid_type, piece]
+	
+func _debug_print_game_board():
+	for row in _game_board:
+		var str = "["
+		for col in row:
+			str += str(col[0]) + ", "
+		str += "]"
+		print(str)
 
 

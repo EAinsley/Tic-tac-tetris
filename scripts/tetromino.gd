@@ -2,6 +2,7 @@ class_name Tetromino
 extends Node2D
 
 signal tetromino_locked(pieces : Array[Piece])
+signal destroyed
 
 @export var piece_scene: PackedScene  
 
@@ -26,7 +27,7 @@ func _ready() -> void:
 		piece.self_index = cell
 		piece.tetromino = self
 		piecies.append(piece)
-		piece.tree_exiting.connect(_on_piece_tree_exiting.bind(piece))
+		piece.destroyed.connect(_on_piece_destroyed.bind(piece))
 	var cross_position: Array = range(4)
 	cross_position.shuffle()
 	# Set cross & circle
@@ -61,6 +62,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		pass
 
 func move(direction: Vector2) -> bool:
+	if piecies.size() == 0:
+		return false
 	var delta_position : Vector2 = calculate_delta_position(direction, position)
 	if delta_position == Vector2.ZERO:
 		return false
@@ -119,7 +122,7 @@ func calculate_delta_position(direction: Vector2, position: Vector2) -> Vector2:
 	for piece in piecies:
 		if board.is_out_of_board(piece.grid_index + direction) || !board.is_grid_empty(piece.grid_index + direction) :
 			return Vector2.ZERO
-	return direction * piecies[0].get_size()
+	return direction *SharedData.grid_size
 	
 func lock():
 	set_process_unhandled_input(false)
@@ -128,9 +131,14 @@ func lock():
 	timer.stop()
 	timer.queue_free()
 
-func _on_piece_tree_exiting(piece: Piece) -> void:
+func _on_piece_destroyed(piece: Piece) -> void:
 	piecies.erase(piece)
-
+	print("tetromino piece erased: ", piecies)
+	if piecies.size() == 0:
+		destroyed.emit()
+		queue_free()
+		
+		
 func _on_timer_timeout() -> void:
 	if !move(Vector2.DOWN):
 		lock()
