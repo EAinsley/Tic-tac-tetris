@@ -73,8 +73,11 @@ func calculate_delta_position(direction: Vector2, position: Vector2) -> Vector2:
 	return direction * piecies[0].get_size()
 	
 func lock():
-	set_process_input(false)
-	tetromino_locked.emit(piecies)
+	set_process_unhandled_input(false)
+	tetromino_locked.emit(self)
+	print("locked")
+	timer.stop()
+	timer.queue_free()
 
 func _on_timer_timeout() -> void:
 	if !move(Vector2.DOWN):

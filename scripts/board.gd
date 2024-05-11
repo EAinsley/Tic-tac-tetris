@@ -5,6 +5,7 @@ extends Node
 
 
 @export var grid_number : Vector2  ## 格子的总数
+var active_tetormino : Array[Tetromino]
 
 enum GridType  {
 	EMPTY, CROSS, CIRCLE
@@ -27,8 +28,13 @@ func is_grid_empty(position: Vector2) -> bool:
 	return _game_board[position.x][position.y] == GridType.EMPTY
 	
 
-func on_tetromino_locked(piecies: Array[Piece]):
-	pass
+func on_tetromino_locked(tetormino: Tetromino):
+	active_tetormino.append(tetormino)
+	var piecies = tetormino.piecies
+	for piece in piecies:
+		var grid_type = GridType.CROSS if piece.is_cross else GridType.CIRCLE
+		_game_board[piece.grid_index.x][piece.grid_index.y] = grid_type
+		# Clear the grid 
 	
 		
 
