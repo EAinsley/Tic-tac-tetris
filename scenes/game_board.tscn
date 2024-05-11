@@ -42,7 +42,7 @@ grid_number = Vector2(10, 20)
 [node name="PieceSpawner" type="Node" parent="Board"]
 script = ExtResource("3_0idpl")
 tetromino_scene = ExtResource("4_uxtaj")
-spawn_position = Vector2(5, 2)
+spawn_position = Vector2(4, 2)
 
 [node name="Marker2D" type="Marker2D" parent="."]
 position = Vector2(-48, -48)

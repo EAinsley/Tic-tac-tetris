@@ -1,12 +1,16 @@
 class_name Tetromino
 extends Node2D
 
+signal tetromino_locked(pieces)
+
 @export var piece_scene: PackedScene  
 
 var piece_data : PieceData :
 	set(value):
 		piece_data = value
 var piecies: Array[Piece]
+var spwan_grid: Vector2
+var board: Board
 
 @onready var timer: Timer = $Timer
 
@@ -16,6 +20,7 @@ func _ready() -> void:
 	for cell : Vector2 in tetromino_cells:
 		var piece: Piece = piece_scene.instantiate() as Piece
 		add_child(piece)
+		piece.grid_index = cell + spwan_grid
 		piece.position = cell * piece.get_size()
 		piecies.append(piece)
 	var cross_position: Array = range(4)
@@ -47,22 +52,30 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif event.is_action_pressed("hard_drop"):
 		while move(Vector2.DOWN):
 			pass
+		lock()
 		print("hard drop")
 		pass
 
 func move(direction: Vector2) -> bool:
 	var delta_position = calculate_delta_position(direction, position)
-	if delta_position != Vector2.ZERO:
-		position += delta_position
-	return false
+	if delta_position == Vector2.ZERO:
+		return false
+	position += delta_position
+	for piece in piecies:
+		piece.move(direction)
+	return true
 	
 func calculate_delta_position(direction: Vector2, position: Vector2) -> Vector2:
 	# check for collision
+	for piece in piecies:
+		if !board.is_grid_empty(piece.grid_index + direction):
+			return Vector2.ZERO
 	return direction * piecies[0].get_size()
-	return Vector2.ZERO
 	
-
-
+func lock():
+	set_process_input(false)
+	tetromino_locked.emit(piecies)
 
 func _on_timer_timeout() -> void:
-	move(Vector2.DOWN) # Replace with function body.
+	if !move(Vector2.DOWN):
+		lock()

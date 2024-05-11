@@ -18,7 +18,9 @@ func _ready() -> void:
 func _spwan_tetromino(type: SharedData.Tetromino, is_preview: bool = false) -> void: 
 	var tetromino : Tetromino = tetromino_scene.instantiate() as Tetromino
 	tetromino.piece_data = SharedData.tetromino_data[type]
-	
+	tetromino.board = board
+	tetromino.tetromino_locked.connect(board.on_tetromino_locked)
 	if !is_preview:
-		tetromino.position = (spawn_position - board.grid_number / 2  - Vector2.ONE * 0.5) * SharedData.grid_size
+		tetromino.position = (spawn_position - board.grid_number / 2  + Vector2.ONE * 0.5) * SharedData.grid_size
+		tetromino.spwan_grid = spawn_position
 		add_child(tetromino)
