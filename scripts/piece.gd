@@ -28,7 +28,7 @@ func get_size() -> Vector2:
 func move(direction: Vector2) -> void:
 	grid_index += direction
 
-func destroy():
+func destroy() -> void:
 	print("piece destroy")
 	destroyed.emit()
 	queue_free()

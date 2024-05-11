@@ -9,6 +9,8 @@ const TIC_TAC_TOE_DIRECTIONS : Array = [
 	[Vector2.RIGHT + Vector2.UP, Vector2.LEFT + Vector2.DOWN]
 ]
 
+signal piecies_erased
+
 @export var grid_number : Vector2  ## 格子的总数
 
 var active_tetormino : Array[Tetromino]
@@ -55,15 +57,19 @@ func on_tetromino_locked(tetormino: Tetromino):
 		print("get piecies: ", piece.grid_index)
 	print("after locked")
 	_debug_print_game_board()
-	var is_fell = true
-	while is_fell:
-		_erase_blocks(tetormino.piecies)
+	while piecies != []:
+		await get_tree().create_timer(0.5).timeout
+		_erase_blocks(piecies)
 		print("after erased")
 		_debug_print_game_board()
-		is_fell = _fall_tetrominos()
-		print("after fall: ", is_fell)
+		await get_tree().create_timer(0.5).timeout
+		piecies = _fall_tetrominos()
+		print("after fall: ")
 		_debug_print_game_board()
-		pass
+		
+	piecies_erased.emit()
+		
+	
 		
 func get_grid_type(pos: Vector2):
 	return _game_board[pos.x][pos.y][0]
@@ -113,17 +119,18 @@ func _erase_blocks(piecies: Array[Piece]):
 func _is_grid_same(left: Vector2, right: Vector2):
 	return !is_out_of_board(left) && !is_out_of_board(right) && get_grid_type(left) == get_grid_type(right)
 	
-func _fall_tetrominos() -> bool:
+func _fall_tetrominos() -> Array[Piece]:
 	print("fall termino")
-	var has_fall = false
+	var piecies_erase : Array[Piece] = []
 	for tetromino : Tetromino in active_tetormino:
 		for piece in tetromino.piecies:
 			_erase_grid(piece.grid_index)
-		while tetromino.move(Vector2.DOWN):
-			has_fall = true
+		if tetromino.hard_drop():
+			for piece in tetromino.piecies:
+				piecies_erase.append(piece)
 		for piece in tetromino.piecies:
 			_set_grid(piece)
-	return has_fall
+	return piecies_erase
 	
 func _erase_grid(pos: Vector2):
 	_game_board[pos.x][pos.y] = [GridType.EMPTY, null]
