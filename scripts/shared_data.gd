@@ -15,6 +15,7 @@ var cells: Dictionary = {
 		Tetromino.Z: [Vector2(-1, -1), Vector2(0, -1), Vector2(0, 0), Vector2(0, 1)],
 	}
 	
+	
 var tetromino_data: Dictionary = {
 	Tetromino.I : load("res://resources/i_piece.tres"),
 	Tetromino.O : load("res://resources/o_piece.tres"),
@@ -25,7 +26,7 @@ var tetromino_data: Dictionary = {
 	Tetromino.Z : load("res://resources/z_piece.tres"),
 }
 
-var clockwise_rotation_transform : Transform2D = Transform2D(-PI/2, Vector2(0, 0))
+var clockwise_rotation_transform : Transform2D = Transform2D(-PI/2, Vector2.ZERO)
 var counter_clockwise_rotation_transform : Transform2D = Transform2D(-PI/2, Vector2(0, 0))
 
 @export var grid_size : Vector2 = Vector2(48, 48)

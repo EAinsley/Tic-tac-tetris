@@ -23,10 +23,15 @@ func _ready() -> void:
 
 
 func is_grid_empty(position: Vector2) -> bool:
-	if position.x >= grid_number.x || position.x < 0 || position.y >= grid_number.y || position.y < 0:
+	if is_out_of_board(position):
 		return false
 	return _game_board[position.x][position.y] == GridType.EMPTY
 	
+	
+func is_out_of_board(position: Vector2) -> bool:
+	if position.x >= grid_number.x || position.x < -0.1 || position.y >= grid_number.y || position.y < 0:
+		return true
+	return false
 
 func on_tetromino_locked(tetormino: Tetromino):
 	active_tetormino.append(tetormino)
@@ -34,8 +39,7 @@ func on_tetromino_locked(tetormino: Tetromino):
 	for piece in piecies:
 		var grid_type = GridType.CROSS if piece.is_cross else GridType.CIRCLE
 		_game_board[piece.grid_index.x][piece.grid_index.y] = grid_type
-		# Clear the grid 
-	
+		print("get piecies: ", piece.grid_index)
 		
 
 
