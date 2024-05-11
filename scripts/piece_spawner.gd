@@ -20,6 +20,7 @@ func _spwan_tetromino(type: SharedData.Tetromino, is_preview: bool = false) -> v
 	tetromino.board = board
 	tetromino.tetromino_locked.connect(board.on_tetromino_locked)
 	tetromino.tetromino_locked.connect(on_tetromino_locked)
+	tetromino.tree_exiting.connect(board.on_tetromino_destroyed.bind(tetromino))
 	if !is_preview:
 		tetromino.position = (spawn_position - board.grid_number / 2  + Vector2.ONE * 0.5) * SharedData.grid_size
 		tetromino.spwan_grid = spawn_position

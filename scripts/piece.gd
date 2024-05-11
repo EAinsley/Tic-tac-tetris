@@ -1,6 +1,8 @@
 class_name Piece
 extends Node2D
 
+signal destroyed
+
 var is_cross : bool 
 
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
@@ -25,6 +27,12 @@ func get_size() -> Vector2:
 
 func move(direction: Vector2) -> void:
 	grid_index += direction
+
+func destroy():
+	print("piece destroy")
+	destroyed.emit()
+	queue_free()
+	
 	
 
 
