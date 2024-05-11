@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="PieceData" load_steps=4 format=3 uid="uid://dpvqh4fwg7het"]
+
+[ext_resource type="Texture2D" uid="uid://3r6n3odwtjei" path="res://arts/textures/prototype/Purple_circle.png" id="1_kxr7b"]
+[ext_resource type="Texture2D" uid="uid://da27wkmbmxik2" path="res://arts/textures/prototype/Purple_cross.png" id="2_6volb"]
+[ext_resource type="Script" path="res://scripts/piece_data.gd" id="3_6ppa0"]
+
+[resource]
+script = ExtResource("3_6ppa0")
+piece_texture_cross = ExtResource("2_6volb")
+piece_texture_circle = ExtResource("1_kxr7b")
+tetromino_type = 5

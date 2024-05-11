@@ -1,11 +1,11 @@
 [gd_resource type="Resource" script_class="PieceData" load_steps=4 format=3 uid="uid://ddo4no8r703m2"]
 
-[ext_resource type="Texture2D" uid="uid://xi4xspf4a36u" path="res://arts/textures/prototype/Blue_circle.png" id="1_ooita"]
+[ext_resource type="Texture2D" uid="uid://cinogffe1qarp" path="res://arts/textures/blocks/I_O.png" id="1_0hvsv"]
 [ext_resource type="Script" path="res://scripts/piece_data.gd" id="1_orxdu"]
-[ext_resource type="Texture2D" uid="uid://bcld6ionc3ai3" path="res://arts/textures/prototype/Blue_cross.png" id="2_46ghd"]
+[ext_resource type="Texture2D" uid="uid://ca4d03qb35pta" path="res://arts/textures/blocks/I_X.png" id="2_80a8i"]
 
 [resource]
 script = ExtResource("1_orxdu")
-piece_texture_cross = ExtResource("2_46ghd")
-piece_texture_circle = ExtResource("1_ooita")
+piece_texture_cross = ExtResource("2_80a8i")
+piece_texture_circle = ExtResource("1_0hvsv")
 tetromino_type = 0
