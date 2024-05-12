@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="SoundList" load_steps=7 format=3 uid="uid://ly5wf0cqyh5e"]
+
+[ext_resource type="AudioStream" uid="uid://bmych72ycenn3" path="res://sounds/bgm.mp3" id="1_fvu2x"]
+[ext_resource type="Script" path="res://scripts/sound_list.gd" id="1_sh21l"]
+[ext_resource type="AudioStream" uid="uid://bl1gq1f4iqpxd" path="res://sounds/danger.mp3" id="2_kal4f"]
+[ext_resource type="AudioStream" uid="uid://dequ4upulm2ym" path="res://sounds/clear.mp3" id="3_v6pur"]
+[ext_resource type="AudioStream" uid="uid://edmsgmcewaux" path="res://sounds/click.mp3" id="4_eqtin"]
+[ext_resource type="AudioStream" uid="uid://sqo5wpebs4le" path="res://sounds/lost.mp3" id="5_ut473"]
+
+[resource]
+script = ExtResource("1_sh21l")
+bgm = ExtResource("1_fvu2x")
+bgm_danger = ExtResource("2_kal4f")
+lost_sound = ExtResource("5_ut473")
+fall_sound = ExtResource("4_eqtin")
+clear_sound = ExtResource("3_v6pur")
