@@ -7,6 +7,7 @@ signal lost
 signal freezed
 
 @export var piece_scene: PackedScene  
+@export var freeze_time: int = 3
 var piece_data : PieceData :
 	set(value):
 		piece_data = value
@@ -24,6 +25,7 @@ var _count_down: int = 3
 
 func _ready() -> void:
 	falling_timer.start(falling_time)
+	_count_down = freeze_time
 	var tetromino_cells : Array = SharedData.cells[piece_data.tetromino_type]
 	for cell : Vector2 in tetromino_cells:
 		var piece: Piece = piece_scene.instantiate() as Piece
