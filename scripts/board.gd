@@ -16,7 +16,7 @@ signal piecies_erased
 var active_tetormino : Array[Tetromino]
 
 enum GridType  {
-	EMPTY, CROSS, CIRCLE
+	EMPTY, CROSS, CIRCLE, FREEZE
 }
 
 var _game_board : Array # Array[Array[GridType]]
@@ -66,13 +66,18 @@ func on_tetromino_locked(tetormino: Tetromino):
 		piecies = _fall_tetrominos()
 		print("after fall: ")
 		_debug_print_game_board()
-		
+	tetormino.freezed.connect(_on_piece_freezed.bind(tetormino))
 	piecies_erased.emit()
+
+	
 		
 	
 		
 func get_grid_type(pos: Vector2):
 	return _game_board[pos.x][pos.y][0]
+
+func set_grid_type(pos: Vector2, type: GridType) -> void:
+	_game_board[pos.x][pos.y][0] = type
 
 func get_grid_piece(pos: Vector2):
 	return _game_board[pos.x][pos.y][1] 
@@ -146,5 +151,13 @@ func _debug_print_game_board():
 			str += str(col[0]) + ", "
 		str += "]"
 		print(str)
+		
+	
+func _on_piece_freezed(tetromino: Tetromino) -> void:
+	for piece in tetromino.piecies:
+		var index = piece.grid_index
+		set_grid_type(index, GridType.FREEZE)
+		active_tetormino.erase(tetromino)
+		
 
 

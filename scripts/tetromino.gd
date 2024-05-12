@@ -4,6 +4,7 @@ extends Node2D
 signal tetromino_locked(pieces : Tetromino)
 signal destroyed
 signal lost
+signal freezed
 
 @export var piece_scene: PackedScene  
 var piece_data : PieceData :
@@ -17,6 +18,8 @@ var spwan_grid: Vector2 :
 var current_index: Vector2
 var board: Board
 var falling_time: float = 1
+var _count_down: int = 3
+
 @onready var falling_timer: Timer = $FallingTimer
 
 func _ready() -> void:
@@ -142,6 +145,14 @@ func hard_drop() -> bool:
 		is_droped = true
 	return is_droped
 	
+func on_spawner_spawned(spawner: PieceSpawner) -> void:
+	_count_down -= 1
+	if _count_down == 0:
+		# TODO: freeze all the piecies
+		freezed.emit()
+		for piece in piecies:
+			piece.sprite_2d.texture = piece_data.piece_texture_freeze
+		spawner.disconnect("piece_spawned", on_spawner_spawned.bind(spawner))
 
 
 func _on_piece_destroyed(piece: Piece) -> void:
@@ -155,3 +166,4 @@ func _on_piece_destroyed(piece: Piece) -> void:
 func _on_timer_timeout() -> void:
 	if !move(Vector2.DOWN):
 		lock()
+

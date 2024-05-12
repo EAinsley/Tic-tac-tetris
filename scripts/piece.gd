@@ -32,6 +32,9 @@ func destroy() -> void:
 	print("piece destroy")
 	destroyed.emit()
 	queue_free()
+
+	
+
 	
 	
 

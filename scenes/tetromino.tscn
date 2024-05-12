@@ -8,6 +8,6 @@ script = ExtResource("1_mn2r3")
 piece_scene = ExtResource("2_4fo7y")
 
 [node name="FallingTimer" type="Timer" parent="."]
+autostart = true
 
 [connection signal="timeout" from="FallingTimer" to="." method="_on_timer_timeout"]
-[connection signal="timeout" from="FallingTimer" to="FallingTimer" method="_on_timeout"]
