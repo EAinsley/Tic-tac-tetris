@@ -130,16 +130,12 @@ func calculate_delta_position(direction: Vector2) -> Vector2:
 	return direction *SharedData.grid_size
 	
 func lock() -> void:
-	for piece in piecies:
-		if piece.grid_index.y < 2:
-			print("lost")
-			lost.emit()
-			return
+
 	set_process_unhandled_input(false)
-	tetromino_locked.emit(self)
 	print("locked")
 	falling_timer.stop()
 	falling_timer.queue_free()
+	tetromino_locked.emit(self)
 	
 func hard_drop() -> bool:
 	var is_droped : bool = false

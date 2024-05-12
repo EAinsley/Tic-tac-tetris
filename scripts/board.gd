@@ -10,6 +10,7 @@ const TIC_TAC_TOE_DIRECTIONS : Array = [
 ]
 
 signal piecies_erased
+signal lost
 
 @export var grid_number : Vector2  ## 格子的总数
 
@@ -20,6 +21,9 @@ enum GridType  {
 }
 
 var _game_board : Array # Array[Array[GridType]]
+@onready var clear_sound: AudioStreamPlayer = $ClearSound
+@onready var fall_sound: AudioStreamPlayer = $FallSound
+@onready var lost_sound: AudioStreamPlayer = $LostSound
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -51,28 +55,36 @@ func is_out_of_board(position: Vector2) -> bool:
 
 func on_tetromino_locked(tetormino: Tetromino) -> void:
 	active_tetormino.append(tetormino)
+	
+	if tetormino != null:
+		tetormino.freezed.connect(_on_piece_freezed.bind(tetormino))
+	
+		
+		
 	var piecies : Array[Piece] = tetormino.piecies
 	for piece : Piece in piecies:
+	
 		_set_grid(piece)
 		print("get piecies: ", piece.grid_index)
 	print("after locked")
 	_debug_print_game_board()
 	while piecies != []:
+		fall_sound.play()
 		await get_tree().create_timer(0.5).timeout
-		_erase_blocks(piecies)
+		if _erase_blocks(piecies):
+			clear_sound.play()
 		print("after erased")
 		_debug_print_game_board()
 		await get_tree().create_timer(0.5).timeout
 		piecies = _fall_tetrominos()
 		print("after fall: ")
 		_debug_print_game_board()
-	if tetormino != null:
-		tetormino.freezed.connect(_on_piece_freezed.bind(tetormino))
-	piecies_erased.emit()
 
-	
+	if !_check_game_lost():
+		piecies_erased.emit()
+	else:
+		_game_lost()
 		
-	
 		
 func get_grid_type(pos: Vector2) -> GridType:
 	return _game_board[pos.x][pos.y][0]
@@ -88,9 +100,24 @@ func get_grid(pos: Vector2) -> Array:
 
 func on_tetromino_destroyed(tetromimo: Tetromino) -> void:
 	active_tetormino.erase(tetromimo)
+	
+func _game_lost() -> void:
+	lost_sound.play()
+	lost.emit()
+	set_process(false)
+	
+func _check_game_lost() -> bool:
+	for column: Array in _game_board:
+		for i: int in range(2):
+			var cell = column[i]
+			print("check lost: ", cell)
+			if cell[0] != GridType.EMPTY:
+				return true
+	return false
+
 
 # To erase the blocks using tic-tac-toe
-func _erase_blocks(piecies: Array[Piece]) -> void:
+func _erase_blocks(piecies: Array[Piece]) -> bool:
 	var piecies_to_erase : Array[Piece] = []
 	var mark_piece_erase : Callable = func(piece: Piece) -> void:
 		if piece and piece not in piecies_to_erase:
@@ -115,11 +142,16 @@ func _erase_blocks(piecies: Array[Piece]) -> void:
 						var piece_to_erase : Piece = get_grid_piece(current_grid)
 						mark_piece_erase.call(piece_to_erase)
 						current_grid += directions[i]
+	
+	var has_erased : bool = false
 	# erase the piece		
 	for piece : Piece in piecies_to_erase:
 		var index : Vector2 = piece.grid_index
 		_game_board[index.x][index.y] = [GridType.EMPTY, null]
 		piece.destroy()
+		has_erased = true
+		
+	return has_erased
 					
 			
 func _is_grid_same(left: Vector2, right: Vector2) -> bool:
