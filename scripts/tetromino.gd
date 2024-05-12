@@ -1,12 +1,13 @@
 class_name Tetromino
 extends Node2D
 
-signal tetromino_locked(pieces : Array[Piece])
+signal tetromino_locked(tetromino : Tetromino)
 signal destroyed
 signal lost
+signal freezed
 
 @export var piece_scene: PackedScene  
-
+@export var freeze_time: int = 3
 var piece_data : PieceData :
 	set(value):
 		piece_data = value
@@ -17,10 +18,14 @@ var spwan_grid: Vector2 :
 		spwan_grid = value
 var current_index: Vector2
 var board: Board
+var falling_time: float = 1
+var _count_down: int = 3
 
-@onready var timer: Timer = $Timer
+@onready var falling_timer: Timer = $FallingTimer
 
 func _ready() -> void:
+	falling_timer.start(falling_time)
+	_count_down = freeze_time
 	var tetromino_cells : Array = SharedData.cells[piece_data.tetromino_type]
 	for cell : Vector2 in tetromino_cells:
 		var piece: Piece = piece_scene.instantiate() as Piece
@@ -56,8 +61,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		print("rotate")
 		pass
 	elif event.is_action_pressed("hard_drop"):
-		while move(Vector2.DOWN):
-			pass
+		hard_drop()
 		lock()
 		print("hard drop")
 		pass
@@ -65,7 +69,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func move(direction: Vector2) -> bool:
 	if piecies.size() == 0:
 		return false
-	var delta_position : Vector2 = calculate_delta_position(direction, position)
+	var delta_position : Vector2 = calculate_delta_position(direction)
 	if delta_position == Vector2.ZERO:
 		return false
 	position += delta_position
@@ -87,10 +91,10 @@ func rotate_clockwise() -> void:
 		
 		# check wall kicks
 		var lock_on_success : bool = false
-		var left_most: int = board.grid_number.x
+		var left_most: int = int(board.grid_number.x)
 		var right_most : int = 0
 		var down_most : int = 0
-		for index in new_index:
+		for index: Vector2 in new_index:
 			left_most = min(index.x + current_index.x, left_most)
 			right_most = max(index.x + current_index.x, right_most)
 			down_most = max(index.y + current_index.y, right_most)
@@ -102,8 +106,8 @@ func rotate_clockwise() -> void:
 			lock_on_success = true
 			offset.y = - (down_most - board.grid_number.y + 1)
 		var rotate_success : bool = true
-		for index in new_index:
-			var index_check = index + current_index + offset
+		for index:Vector2 in new_index:
+			var index_check :Vector2= index + current_index + offset
 			if !board.is_grid_empty(index_check):
 				print("index check: ", index_check, ", offset: ", offset)
 				rotate_success = false
@@ -118,14 +122,14 @@ func rotate_clockwise() -> void:
 	# update
 	move(offset)
 		
-func calculate_delta_position(direction: Vector2, position: Vector2) -> Vector2:
+func calculate_delta_position(direction: Vector2) -> Vector2:
 	# check for collision
 	for piece in piecies:
 		if board.is_out_of_board(piece.grid_index + direction) || !board.is_grid_empty(piece.grid_index + direction) :
 			return Vector2.ZERO
 	return direction *SharedData.grid_size
 	
-func lock():
+func lock() -> void:
 	for piece in piecies:
 		if piece.grid_index.y < 2:
 			print("lost")
@@ -134,8 +138,23 @@ func lock():
 	set_process_unhandled_input(false)
 	tetromino_locked.emit(self)
 	print("locked")
-	timer.stop()
-	timer.queue_free()
+	falling_timer.stop()
+	falling_timer.queue_free()
+	
+func hard_drop() -> bool:
+	var is_droped : bool = false
+	while move(Vector2.DOWN):
+		is_droped = true
+	return is_droped
+	
+func on_spawner_spawned(spawner: PieceSpawner) -> void:
+	_count_down -= 1
+	if _count_down < 0:
+		# TODO: freeze all the piecies
+		freezed.emit()
+		for piece in piecies:
+			piece.sprite_2d.texture = piece_data.piece_texture_freeze
+		spawner.disconnect("piece_spawned", on_spawner_spawned.bind(spawner))
 
 
 func _on_piece_destroyed(piece: Piece) -> void:
@@ -149,3 +168,4 @@ func _on_piece_destroyed(piece: Piece) -> void:
 func _on_timer_timeout() -> void:
 	if !move(Vector2.DOWN):
 		lock()
+
