@@ -10,7 +10,6 @@ const SPEED_UNIT: float = 1000
 @export var tetromino_scene: PackedScene
 @export var spawn_position: Vector2 ## 填入格子的位置，左上角为原点
 
-var current_tetromino: SharedData.Tetromino
 var _current_speed : float 
 
 @onready var board: Board = $".."
@@ -38,7 +37,7 @@ func _spwan_tetromino(type: SharedData.Tetromino, is_preview: bool = false) -> v
 func _spwan_new_tetormino() -> void:
 	print("spawn")
 	piece_spawned.emit()
-	var current_tetromino = SharedData.Tetromino.values().pick_random()
+	var current_tetromino : SharedData.Tetromino = SharedData.Tetromino.values().pick_random()
 	_spwan_tetromino(current_tetromino)
 	
 func _on_pieces_erased() -> void:

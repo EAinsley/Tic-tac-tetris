@@ -1,7 +1,7 @@
 class_name Tetromino
 extends Node2D
 
-signal tetromino_locked(pieces : Tetromino)
+signal tetromino_locked(tetromino : Tetromino)
 signal destroyed
 signal lost
 signal freezed
@@ -149,7 +149,7 @@ func hard_drop() -> bool:
 	
 func on_spawner_spawned(spawner: PieceSpawner) -> void:
 	_count_down -= 1
-	if _count_down == 0:
+	if _count_down < 0:
 		# TODO: freeze all the piecies
 		freezed.emit()
 		for piece in piecies:
