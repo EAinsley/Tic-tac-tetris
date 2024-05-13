@@ -11,10 +11,12 @@ const TIC_TAC_TOE_DIRECTIONS : Array = [
 
 signal piecies_erased
 signal lost
+signal score_changed(score: int)
 
 @export var grid_number : Vector2  ## 格子的总数
 
 var active_tetormino : Array[Tetromino]
+var score : int = 0
 
 enum GridType  {
 	EMPTY, CROSS, CIRCLE, FREEZE
@@ -149,7 +151,10 @@ func _erase_blocks(piecies: Array[Piece]) -> bool:
 		var index : Vector2 = piece.grid_index
 		_game_board[index.x][index.y] = [GridType.EMPTY, null]
 		piece.destroy()
+	if piecies_to_erase.size() > 0:
 		has_erased = true
+		score += piecies_to_erase.size()
+		score_changed.emit(score)
 		
 	return has_erased
 					
