@@ -34,6 +34,7 @@ func _ready() -> void:
 		piece.tetromino = self
 		piecies.append(piece)
 		piece.destroyed.connect(_on_piece_destroyed.bind(piece))
+		piece.tree_exiting.connect(_on_piece_exiting_tree)
 	var cross_position: Array = range(4)
 	cross_position.shuffle()
 	# Set cross & circle
@@ -43,6 +44,8 @@ func _ready() -> void:
 	for i in range(2, 4):
 		piecies[cross_position[i]].sprite_2d.texture = piece_data.piece_texture_circle
 		piecies[cross_position[i]].is_cross = false
+	for piece: Piece in piecies:
+		piece.particle.texture = piece_data.particle_texture
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("move_left"):
@@ -158,6 +161,9 @@ func _on_piece_destroyed(piece: Piece) -> void:
 	print("tetromino piece erased: ", piecies)
 	if piecies.size() == 0:
 		destroyed.emit()
+
+func _on_piece_exiting_tree() -> void:
+	if piecies.size() == 0:
 		queue_free()
 		
 		
