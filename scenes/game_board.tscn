@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3 uid="uid://85ghs1acerx7"]
+[gd_scene load_steps=18 format=3 uid="uid://85ghs1acerx7"]
 
 [ext_resource type="Texture2D" uid="uid://hub0yiy1jr0t" path="res://arts/textures/prototype/Border.png" id="1_8w8re"]
 [ext_resource type="Texture2D" uid="uid://dfo4gwpssvxh" path="res://arts/textures/prototype/Grid.png" id="2_jhvnm"]
@@ -13,6 +13,14 @@
 [ext_resource type="AudioStream" uid="uid://sqo5wpebs4le" path="res://sounds/lost.mp3" id="8_6n82d"]
 [ext_resource type="Texture2D" uid="uid://d1nsgeyg0crp1" path="res://ui resoureces/Sound_on.png" id="8_d6hha"]
 [ext_resource type="Script" path="res://scripts/hud.gd" id="10_025ia"]
+[ext_resource type="Texture2D" uid="uid://bgioi1sks2myb" path="res://ui resoureces/Continue.png" id="11_agjei"]
+[ext_resource type="Texture2D" uid="uid://bf1164e7bpfbv" path="res://ui resoureces/Sound_off.png" id="12_annxr"]
+
+[sub_resource type="InputEventAction" id="InputEventAction_npkpr"]
+action = &"ui_cancel"
+
+[sub_resource type="Shortcut" id="Shortcut_jl3gc"]
+events = [SubResource("InputEventAction_npkpr")]
 
 [node name="GameBoard" type="Node2D"]
 
@@ -61,15 +69,11 @@ stream = ExtResource("7_3ciyl")
 [node name="LostSound" type="AudioStreamPlayer" parent="Board"]
 stream = ExtResource("8_6n82d")
 
-[node name="BGM" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("6_41w47")
-volume_db = 10.0
-autoplay = true
-
 [node name="Marker2D" type="Marker2D" parent="."]
 position = Vector2(-48, -48)
 
 [node name="HUD" type="Control" parent="."]
+process_mode = 3
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -82,6 +86,10 @@ grow_horizontal = 2
 grow_vertical = 2
 pivot_offset = Vector2(324, 648)
 script = ExtResource("10_025ia")
+continue_texture = ExtResource("11_agjei")
+pause_texture = ExtResource("6_3k1pb")
+sound_off_texture = ExtResource("12_annxr")
+sound_on_texture = ExtResource("8_d6hha")
 
 [node name="PanelContainer" type="PanelContainer" parent="HUD"]
 layout_mode = 1
@@ -129,6 +137,7 @@ offset_left = 548.0
 offset_top = 15.0
 offset_right = 621.0
 offset_bottom = 89.0
+focus_mode = 0
 texture_normal = ExtResource("8_d6hha")
 ignore_texture_size = true
 stretch_mode = 4
@@ -139,6 +148,50 @@ offset_left = 460.0
 offset_top = 15.0
 offset_right = 533.0
 offset_bottom = 89.0
+focus_mode = 0
+shortcut = SubResource("Shortcut_jl3gc")
 texture_normal = ExtResource("6_3k1pb")
 ignore_texture_size = true
 stretch_mode = 4
+
+[node name="BGM" type="AudioStreamPlayer" parent="HUD/Pause"]
+process_mode = 3
+stream = ExtResource("6_41w47")
+volume_db = 10.0
+autoplay = true
+
+[node name="LostText" type="Panel" parent="HUD"]
+visible = false
+z_index = 2
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -75.0
+offset_right = 150.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="HUD/LostText"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 40
+text = "You Lost!"
+
+[connection signal="pressed" from="HUD/Config" to="HUD" method="_on_config_pressed"]
+[connection signal="pressed" from="HUD/Sound" to="HUD" method="_on_sound_pressed"]
+[connection signal="pressed" from="HUD/Pause" to="HUD" method="_on_pause_pressed"]
