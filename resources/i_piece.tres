@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="PieceData" load_steps=5 format=3 uid="uid://ddo4no8r703m2"]
+[gd_resource type="Resource" script_class="PieceData" load_steps=6 format=3 uid="uid://ddo4no8r703m2"]
 
 [ext_resource type="Texture2D" uid="uid://cinogffe1qarp" path="res://arts/textures/blocks/I_O.png" id="1_0hvsv"]
+[ext_resource type="Texture2D" uid="uid://dgldu6cym3oly" path="res://arts/textures/blocks/I.png" id="1_lrr8h"]
 [ext_resource type="Script" path="res://scripts/piece_data.gd" id="1_orxdu"]
 [ext_resource type="Texture2D" uid="uid://ca4d03qb35pta" path="res://arts/textures/blocks/I_X.png" id="2_80a8i"]
 [ext_resource type="Texture2D" uid="uid://dd5cyeymuj5wo" path="res://icon.svg" id="3_we0ix"]
@@ -11,3 +12,4 @@ piece_texture_cross = ExtResource("2_80a8i")
 piece_texture_circle = ExtResource("1_0hvsv")
 piece_texture_freeze = ExtResource("3_we0ix")
 tetromino_type = 0
+particle_texture = ExtResource("1_lrr8h")

@@ -1,10 +1,37 @@
-[gd_scene load_steps=4 format=3 uid="uid://cj1dsw1hyaetd"]
+[gd_scene load_steps=9 format=3 uid="uid://cj1dsw1hyaetd"]
 
 [ext_resource type="Texture2D" uid="uid://xi4xspf4a36u" path="res://arts/textures/prototype/Blue_circle.png" id="1_2be5r"]
 [ext_resource type="Script" path="res://scripts/piece.gd" id="1_rgo44"]
+[ext_resource type="Texture2D" uid="uid://dgldu6cym3oly" path="res://arts/textures/blocks/I.png" id="3_l72ht"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ms30b"]
 size = Vector2(48, 48)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_cdl1r"]
+particles_animation = true
+particles_anim_h_frames = 2
+particles_anim_v_frames = 1
+particles_anim_loop = false
+
+[sub_resource type="Curve" id="Curve_eknbu"]
+_data = [Vector2(0, 0.00028801), 0.0, 0.0, 0, 0, Vector2(0.139683, 0.707949), 0.94355, 0.94355, 0, 0, Vector2(1, 1), -0.200755, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_ualwq"]
+curve = SubResource("Curve_eknbu")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_yqpff"]
+particle_flag_disable_z = true
+spread = 180.0
+initial_velocity_min = 50.0
+initial_velocity_max = 80.0
+gravity = Vector3(0, -98, 0)
+damping_min = 80.0
+damping_max = 80.0
+scale_min = 0.05
+scale_max = 0.1
+scale_curve = SubResource("CurveTexture_ualwq")
+anim_offset_max = 1.0
 
 [node name="Piece" type="Node2D"]
 script = ExtResource("1_rgo44")
@@ -15,3 +42,15 @@ texture = ExtResource("1_2be5r")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_ms30b")
+
+[node name="Particle" type="GPUParticles2D" parent="."]
+z_index = 1
+material = SubResource("CanvasItemMaterial_cdl1r")
+emitting = false
+process_material = SubResource("ParticleProcessMaterial_yqpff")
+texture = ExtResource("3_l72ht")
+lifetime = 0.7
+one_shot = true
+explosiveness = 0.7
+
+[connection signal="finished" from="Particle" to="." method="_on_particle_finished"]

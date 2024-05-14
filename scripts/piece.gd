@@ -7,6 +7,10 @@ var is_cross : bool
 
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 @onready var sprite_2d: Sprite2D = $Sprite2D
+@onready var particle: GPUParticles2D = $Particle
+
+@export var destroy_particles: PackedScene
+
 var tetromino: Tetromino
 var self_index: Vector2 :
 	set(value):
@@ -31,11 +35,9 @@ func move(direction: Vector2) -> void:
 func destroy() -> void:
 	print("piece destroy")
 	destroyed.emit()
+	sprite_2d.visible = false
+	particle.emitting = true
+
+
+func _on_particle_finished() -> void:
 	queue_free()
-
-	
-
-	
-	
-
-

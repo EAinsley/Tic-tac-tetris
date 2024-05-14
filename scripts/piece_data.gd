@@ -5,3 +5,4 @@ extends Resource
 @export var piece_texture_circle: Texture
 @export var piece_texture_freeze: Texture
 @export var tetromino_type: SharedData.Tetromino
+@export var particle_texture: CompressedTexture2D
